@@ -56,15 +56,16 @@ def load_overrides_from_env(config):
     # treat values as string. Leave type conversion for plugins themselves.
     for plugin in config.get('ACTIVE_PLUGINS', []):
         prefix = prefix_from_plugin_name(plugin)
+        plugin_name = plugin.split('.')[-1]
         plugin_configs = [
             var for var in os.environ
             if var.startswith(prefix)]
 
         # Create if necessary
-        if plugin not in config:
-            config[plugin] = {}
+        if plugin_name not in config:
+            config[plugin_name] = {}
 
-        config[plugin].update({
+        config[plugin_name].update({
             param.split(prefix)[-1].lower(): os.environ[param]
             for param in plugin_configs})
 
