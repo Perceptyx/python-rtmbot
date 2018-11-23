@@ -22,7 +22,7 @@ class RtmBot(object):
                     - BASE_PATH (optional: defaults to execution directory) RtmBot will
                         look in this directory for plugins.
                     - LOGFILE (optional: defaults to rtmbot.log) The filename for logs, will
-                        be stored inside the BASE_PATH directory
+                        be stored inside the BASE_PATH directory. If 'STDOUT', will log to sys.stdout only, useful for running inside Docker.
                     - DEBUG (optional: defaults to False) with debug enabled, RtmBot will
                         break on errors
         '''
@@ -52,9 +52,15 @@ class RtmBot(object):
             log_level = logging.DEBUG
         else:
             log_level = logging.INFO
-        logging.basicConfig(filename=log_file,
-                            level=log_level,
-                            format='%(asctime)s %(message)s')
+        
+        if log_file == 'STDOUT':
+            logging.basicConfig(stream=sys.stdout,
+                                level=log_level,
+                                format='%(asctime)s %(message)s')
+        else:
+            logging.basicConfig(filename=log_file,
+                                level=log_level,
+                                format='%(asctime)s %(message)s')
         logging.info('Initialized in: {}'.format(self.directory))
 
         # initialize stateful fields
